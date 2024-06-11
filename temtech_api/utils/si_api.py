@@ -28,7 +28,8 @@ def submit_sales_invoice():
 
         transaction_id = sales_invoice_data["transaction_id"]
 
-        taxes_and_charges = "VAT 10%"
+        tax_category = "VAT 10%"
+        taxes_and_charges = "VAT 10% - TTT"
 
         taxes_and_charges_row_charge_type = "On Net Total"
         taxes_and_charges_row_account_head = "21201 - ضريبة القيمة المضافة واجبة السداد VAT - TTT"
@@ -45,7 +46,7 @@ def submit_sales_invoice():
         items_row_qty = 1
         items_row_uom = "Nos"
         items_row_rate = sales_invoice_data["amount"]
-        items_row_income_account = "4111 - المبيعات - TTT"
+        items_row_income_account = "4121 - المبيعات (سوشيال ميديا) - TTT"
         items_row_cost_center = "Main - TTT"
 
         si_doc = frappe.new_doc('Sales Invoice')
@@ -58,6 +59,7 @@ def submit_sales_invoice():
         si_doc.pos_profile = pos_profile
         si_doc.custom_transaction_id = transaction_id
 
+        si_doc.tax_category = tax_category
         si_doc.taxes_and_charges = taxes_and_charges
         si_doc.taxes = []
         si_doc.append('taxes', {
@@ -80,7 +82,9 @@ def submit_sales_invoice():
             "item_name": items_row_item_name,
             "qty": items_row_qty,
             "uom": items_row_uom,
-            "rate": items_row_rate
+            "rate": items_row_rate,
+            "income_account": items_row_income_account,
+            "cost_center": items_row_cost_center
         })
 
         si_doc.insert(ignore_permissions=True)
